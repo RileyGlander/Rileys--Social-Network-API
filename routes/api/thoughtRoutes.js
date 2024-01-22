@@ -7,7 +7,7 @@ updateThought,
 deleteThought,
 createReaction,
 removeReaction,
-} = require('../../controllers/userController');
+} = require('../../controllers/thoughtController');
 
 router.route('/api/thoughts').get(getThoughts)
 router.route('/api/thoughts:/id').get(getSingleThought)
