@@ -16,3 +16,5 @@ router.route('/api/users').get(deleteUser)
 router.route('/api/users/:userId/friends/:friendId').get(addFriend)
 router.route('/api/users/:userId/friends/:friendId').get(removeFriend)
 
+module.exports = router;
+

@@ -11,13 +11,12 @@ removeReaction,
 
 router.route('/api/thoughts').get(getThoughts)
 router.route('/api/thoughts:/id').get(getSingleThought)
-router.route('/api/thoughts').get(createThought).post(createUser);
-router.route('/api/thoughts').get(updateThought).post(createUser);
-router.route('/api/thoughts:/id').get(deleteThought).post(createUser);
-router.route('/api/thoughts/:thoughtId/reactions').get(createReaction).post(createUser);
-router.route('/api/thoughts/:thoughtId/reactions/:reactionId').get(removeReaction).post(createUser);
+router.route('/api/thoughts').get(createThought)
+router.route('/api/thoughts').get(updateThought)
+router.route('/api/thoughts:/id').get(deleteThought)
+router.route('/api/thoughts/:thoughtId/reactions').get(createReaction)
+router.route('/api/thoughts/:thoughtId/reactions/:reactionId').get(removeReaction)
 
 
-router.route('/:userId').get(getSingleUser);
 
 module.exports = router;

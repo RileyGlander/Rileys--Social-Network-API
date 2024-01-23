@@ -43,4 +43,4 @@ const Reaction = model('reaction', reactionSchema)
   const Thought = model('thought', thoughtSchema)
   
 
-  module.exports = { Thought, Reaction };
+  module.exports = Thought, Reaction;

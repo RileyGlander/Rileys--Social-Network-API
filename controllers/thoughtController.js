@@ -1,4 +1,4 @@
-const { Thought, User } = require ('..models')
+const { Thought, User } = require ('../models')
 
 module.exports = {
     // Get to get all thoughts
@@ -11,6 +11,7 @@ module.exports = {
     }
     },
 
+    // Get to get a single thought by its _id
 async getSingleThought(req, res) {
     try {
         const oneThought = await Thought.findOne({ _id: req.params.id})
@@ -24,12 +25,14 @@ async getSingleThought(req, res) {
     }
 },
 
+// POST to create a new thought 
 async createThought(req, res) {
     try {
         const newThought = await Thought.create(req.body)
         const updateUser = await User.findOneAndUpdate(
-            { username: req.body.username }, 
-            { $push: { thoughts: newThought} })
+            { _id: req.body.username }, 
+            { $addToset: { thoughts: newThought._id} },
+            {new: true });
             
             if (!updateUser) {
                 return res
@@ -44,6 +47,7 @@ async createThought(req, res) {
             }
           },
 
+  // PUT to update a thought by its _id
 async updateThought (req, res) {
     try {
         const updatedThought = await Thought.findOneAndUpdate({ _id: req.params.id }, 
@@ -60,6 +64,7 @@ async updateThought (req, res) {
             }
           },
 
+// DELETE to remove a thought by its _id
 async deleteThought(req, res) {
 try {
     const deletedThought = await Thought.findByIdAndDelete( req.params.id );
@@ -86,6 +91,7 @@ try {
     }
   },
 
+  // POST to create a reaction stored in a single thought's reactions array field
 async createReaction(req, res) {
   try {
     const newReaction = await Thought.create({ thoughtId: req.params.thoughtId, reactionBody: req.body.reactionBody });
@@ -108,6 +114,7 @@ async createReaction(req, res) {
     }
   },
   
+  // DELETE to pull and remove a reaction by the reaction's reactionId value
 async removeReaction(req, res) {
 try {
   const deleteReaction = await Thoughts.findOneAndRemove( req.params.thoughtId, 

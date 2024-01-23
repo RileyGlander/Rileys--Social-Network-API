@@ -1,7 +1,4 @@
-const app = require('express').Router();
-const User = require('../models/User');
-const Thought = require('../models/Thought');
-const Reaction = require('../models/Reaction');
+const { User } = require('../models/User');
 
 module.exports = {
     // Get all users
@@ -42,7 +39,9 @@ module.exports = {
       // Put to update a user by its _id
       async updateUser(req, res) {
         try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {new: true}) ;
+        const updatedUser = await User.findOneAndUpdate({ _id: req.params.userId },
+          { $set: req.body },
+          { runValidators: true, new: true}) ;
             
         if (!updatedUser) {
             return res.status(404).json({ message: 'No user with this id!' });
@@ -61,7 +60,7 @@ module.exports = {
     // Delete to remove user by its _id
       async deleteUser(req, res) {
         try {
-          const user = await User.findOneAndDelete({ _id: req.params.userId });
+          const user = await User.findOneAndRemove({ _id: req.params.userId });
     
           if (!user) {
             return res.status(404).json({ message: 'No user with that ID' });
@@ -78,8 +77,9 @@ module.exports = {
 // Post to add a new friend to a users friend list
     async addFriend(req, res) {
     try {
-        const addFriend = await User.findByIdAndUpdate(req.params.userId, 
-            { $push: {friends: req.params.friendId } }, { new: true })
+        const addFriend = await User.findOneAndUpdate({ _id: req.params.userId }, 
+            { $addToSet: { friendId: req.body } },
+            { runValidators: true,  new: true })
             
             if (!addFriend) {
                 return res.status(404).json({ message: 'No friend with this id!' });
@@ -95,13 +95,14 @@ module.exports = {
 // Delete to remove a friend from a users friend list
     async removeFriend(req, res) {
     try{
-        const deletedFriend = await User.findByIdAndUpdate(req.params.userId, 
-            { $pull: { friends: req.params.friendId } }, { new: true });
-            if (!application) {
-                return res.status(404).json({ message: 'No application with this id!' });
+        const deletedFriend = await User.findOneAndUpdate({_id: req.params.userId }, 
+            { $pull: { friends: { friendId: req.params.friendId } } }, 
+            { runValidators : true, new: true });
+            if (!deletedFriend) {
+                return res.status(404).json({ message: 'No friend with this id!' });
               }
         
-              res.json(application);
+              res.json(deletedFriend);
             } catch (err) {
               res.status(500).json(err);
             }
