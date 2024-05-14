@@ -31,7 +31,7 @@ const { Thought, User } = require ('../models')
       try {
           const newThought = await Thought.create(req.body)
           const updateUser = await User.findOneAndUpdate(
-              { _id: req.body.username }, 
+              { username: req.body.username }, 
               { $addToset: { thoughts: newThought._id} },
               {new: true });
               
