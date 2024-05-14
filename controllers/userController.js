@@ -1,4 +1,5 @@
-const { User } = require('../models/User');
+const { User } = require('../models'); 
+// Use { User } to reference the User model
 
 module.exports = {
     // Get all users
@@ -60,11 +61,7 @@ module.exports = {
     // Delete to remove user by its _id
       async deleteUser(req, res) {
         try {
-          const user = await User.findOneAndRemove({ _id: req.params.userId });
-    
-          if (!user) {
-            return res.status(404).json({ message: 'No user with that ID' });
-          }
+          const user = await User.findOneAndDelete({ _id: req.params.userId });
     
           await Application.deleteMany({ _id: { $in: user.applications } });
           res.json({ message: 'User and associated apps deleted!' })
@@ -108,4 +105,4 @@ module.exports = {
             }
         }    
 
-}
+};

@@ -5,17 +5,20 @@ getSingleThought,
 createThought,
 updateThought,
 deleteThought,
+
 createReaction,
 removeReaction,
 } = require('../../controllers/thoughtController');
 
-router.route('/api/thoughts').get(getThoughts)
-router.route('/api/thoughts:/id').get(getSingleThought)
-router.route('/api/thoughts').get(createThought)
-router.route('/api/thoughts').get(updateThought)
-router.route('/api/thoughts:/id').get(deleteThought)
-router.route('/api/thoughts/:thoughtId/reactions').get(createReaction)
-router.route('/api/thoughts/:thoughtId/reactions/:reactionId').get(removeReaction)
+// /api/thoughts
+router.route('/').get(getThoughts).post(createThought)
+
+router.route('/:thoughtId').get(getSingleThought)
+.put(updateThought)
+.delete(deleteThought)
+
+router.route('/api/thoughts/:thoughtId/reactions').put(createReaction)
+router.route('/api/thoughts/:thoughtId/reactions/:reactionId').delete(removeReaction)
 
 
 
