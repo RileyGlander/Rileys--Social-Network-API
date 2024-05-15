@@ -14,7 +14,7 @@ const { Thought, User } = require ('../models')
       // Get to get a single thought by its _id
   async getSingleThought(req, res) {
       try {
-          const oneThought = await Thought.findOne({ _id: req.params.id})
+          const oneThought = await Thought.findOne({ _id: req.params.thoughtId})
             .select('-__v');
 
           if (!oneThought) {
@@ -51,7 +51,7 @@ const { Thought, User } = require ('../models')
     // PUT to update a thought by its _id
   async updateThought (req, res) {
       try {
-          const updatedThought = await Thought.findOneAndUpdate({ _id: req.params.id }, 
+          const updatedThought = await Thought.findOneAndUpdate({ _id: req.params.thoughtId }, 
               { thoughtText: req.body.thoughtText, createdAt: req.body.createdAt });
               
               if (!updatedThought) {
@@ -68,7 +68,7 @@ const { Thought, User } = require ('../models')
   // DELETE to remove a thought by its _id
   async deleteThought(req, res) {
   try {
-      const deletedThought = await Thought.findByIdAndDelete( req.params.id );
+      const deletedThought = await Thought.findByIdAndDelete( req.params.thoughtId );
       
       if (!deletedThought) {
           return res.status(404).json({ message: 'No thought with this id!' });
@@ -81,13 +81,14 @@ const { Thought, User } = require ('../models')
         );
 
         if (!user) {
-          return res
-            .status(404)
-            .json({ message: 'Thought created but no user with this id!' });
+          return res.status(404).json({ 
+            message: 'Thought deleted but no user with this id!' 
+          });
         }
 
         res.json({ message: 'Thought successfully deleted!' });
       } catch (err) {
+        console.log(err);
         res.status(500).json(err);
       }
     },
@@ -95,7 +96,7 @@ const { Thought, User } = require ('../models')
     // POST to create a reaction stored in a single thought's reactions array field
   async createReaction(req, res) {
     try {
-      const newReaction = await Thought.create({ thoughtId: req.params.thoughtId, reactionBody: req.body.reactionBody });
+      const newReaction = await Thought.create({ _id: req.params.thoughtId, reactionBody: req.body.reactionBody });
       const user = await User.findOneAndUpdate(
           { _id: req.body.userId },
           { $addToSet: { reactions: newReaction._id } },
