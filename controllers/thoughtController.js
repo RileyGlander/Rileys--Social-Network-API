@@ -1,4 +1,4 @@
-const { Thought, User } = require ('../models')
+const { Thought, User, Reaction } = require ('../models')
 
   module.exports = {
       // Get to get all thoughts
@@ -119,8 +119,9 @@ const { Thought, User } = require ('../models')
     // DELETE to pull and remove a reaction by the reaction's reactionId value
   async removeReaction(req, res) {
   try {
-    const deleteReaction = await Thoughts.findOneAndRemove( req.params.thoughtId, 
-      { $pull: { reactions: { _id: req.params.reactionId } } }, { new: true })
+    const deleteReaction = await Reaction.findOneAndRemove( req.params.reactionId, 
+      { $pull: { reactions: { _id: req.params.reactionId } } }, 
+      { new: true })
       
       if (!deleteReaction) {
         return res.status(404).json({ message: 'No reaction with this id!' });
