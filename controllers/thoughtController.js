@@ -96,55 +96,43 @@ const { Thought, User, Reaction } = require ('../models')
     // POST to create a reaction stored in a single thought's reactions array field
   async createReaction(req, res) {
     try {
-      const newReaction = await Thought.create({ _id: req.params.thoughtId, reactionBody: req.body.reactionBody });
-      const user = await User.findOneAndUpdate(
-          { _id: req.body.userId },
-          { $addToSet: { reactions: newReaction._id } },
-          { new: true }
-        );
+      const newReaction = await Thought.findOneAndUpdate(
+        { _id: req.params.thoughtId },
+        { $addToSet: { reactions: req.body } },
+        { runValidators: true, new: true  }
+      );
         
-        if (!user) {
-          return res.status(404).json({
-            message: 'Application created, but found no user with that ID',
-          })
-        }
-
-        res.json('Created the reaction 🎉');
-      } catch (err) {
-        console.log(err);
-        res.status(500).json(err);
+      if (!newReaction) {
+        return res.status(404).json({ message: 'No thought with this ID' });
       }
-    },
+  
+      res.json('Created the reaction 🎉');
+    } catch (err) {
+      console.log(err);
+      res.status(500).json(err);
+    }
+  },
     
     // DELETE to pull and remove a reaction by the reaction's reactionId value
   async removeReaction(req, res) {
   try {
-    const deleteReaction = await Reaction.findOneAndRemove( req.params.reactionId, 
-      { $pull: { reactions: { _id: req.params.reactionId } } }, 
-      { new: true })
+    const deleteReaction = await Thought.findOneAndUpdate(
+      { _id: req.params.thoughtId },
+      { $pull: { reactions: { _id: req.params.reactionId } } },
+      { runValidators: true, new: true }
+    );
       
-      if (!deleteReaction) {
-        return res.status(404).json({ message: 'No reaction with this id!' });
-      }
-
-      const user = await User.findOneAndUpdate(
-        { reactions: req.params.reactionId },
-        { $pull: { reactions: req.params.reactionId } },
-        { new: true }
-      );
-
-      if (!user) {
-        return res.status(404).json({
-          message: 'Reaction created but no user with this id!',
-        });
-      }
-
-      res.json({ message: 'Reaction successfully deleted!' });
-    } catch (err) {
-      res.status(500).json(err);
+    if (!deleteReaction) {
+      return res.status(404).json({ message: 'No reaction with this ID' });
     }
-  },
-};
+
+    res.json({ message: 'Reaction successfully deleted!' });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err);
+  }
+},
+}
 
 
 
