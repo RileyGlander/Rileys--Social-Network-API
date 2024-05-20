@@ -10,7 +10,7 @@
 - What did you learn? I learned how to create schemas with mongoose as well as understand more about SchemaTypes and Validations.
 
 ## Video
-https://drive.google.com/file/d/1sSbQiXFbwt--Dm70SRzmCvJ8whhsTxBj/view
+https://drive.google.com/file/d/1M6ULDVbh9hqjJWDzJNAFnMw9jCVUFyoT/view
 
 ## Installation
 You can install this with git bash by typing in 'git clone Replace this with link' to wherever you want the repository to be installed on your computer.
